@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enviar Reporte a Sibir Planet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 min-h-screen flex items-center justify-center p-4 transition-colors duration-500">
+
+    <!-- Contenedor principal de la aplicación -->
+    <div class="bg-white dark:bg-gray-800 p-8 md:p-10 rounded-xl shadow-lg w-full max-w-2xl relative transition-colors duration-500">
+        <!-- Botón para alternar el modo oscuro/claro -->
+        <button id="theme-toggle" class="absolute top-4 right-4 p-2 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 transition-colors duration-300 hover:bg-gray-300 dark:hover:bg-gray-700">
+            <!-- Icono de sol (modo claro) -->
+            <svg id="sun-icon" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.364 1.636a1 1 0 010 1.414l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 0zm-8.728 0a1 1 0 011.414 0l.707.707a1 1 0 01-1.414 1.414L3.636 4.364a1 1 0 010-1.414zm7.072 12.048a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM3 10a1 1 0 01-1-1V8a1 1 0 112 0v1a1 1 0 01-1 1zm14 0a1 1 0 01-1-1V8a1 1 0 112 0v1a1 1 0 01-1 1zM4.364 16.364a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zm8.728 0a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM10 5a5 5 0 100 10 5 5 0 000-10zm0 2a3 3 0 110 6 3 3 0 010-6z"/></svg>
+            <!-- Icono de luna (modo oscuro) -->
+            <svg id="moon-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
+        </button>
+
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-800 dark:text-gray-200 text-center mb-6 transition-colors duration-500">Enviar un Reporte a Sibir Planet</h1>
+
+        <!-- Formulario para el reporte -->
+        <form id="report-form" class="space-y-6">
+            <div>
+                <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-500">Título del Reporte</label>
+                <input type="text" id="title" name="title" class="mt-1 block w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-colors duration-150 ease-in-out placeholder-gray-400 dark:placeholder-gray-500 text-gray-800 dark:text-white" placeholder="Escribe un título conciso">
+            </div>
+
+            <div>
+                <label for="report-text" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-500">Contenido del Reporte</label>
+                <textarea id="report-text" name="report-text" rows="8" class="mt-1 block w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-colors duration-150 ease-in-out placeholder-gray-400 dark:placeholder-gray-500 text-gray-800 dark:text-white" placeholder="Escribe tu reporte aquí..."></textarea>
+            </div>
+
+            <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
+                Enviar a Discord
+            </button>
+        </form>
+
+        <!-- Mensaje de estado (éxito o error) -->
+        <div id="status-message" class="mt-6 text-center text-sm font-medium hidden"></div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('report-form');
+            const titleInput = document.getElementById('title');
+            const reportTextarea = document.getElementById('report-text');
+            const statusMessage = document.getElementById('status-message');
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const sunIcon = document.getElementById('sun-icon');
+            const moonIcon = document.getElementById('moon-icon');
+
+            // Webhook URL proporcionada por el usuario
+            const webhookUrl = 'https://discord.com/api/webhooks/1417184081313009694/tzd8qnvEr6vVaX_3E3NgIiSg-ofTCpbG_N9tVyTG67Sa5Nw1R8z9h0SeH9bur63gnySj';
+
+            // Función para alternar el modo oscuro
+            function toggleDarkMode() {
+                const htmlElement = document.documentElement;
+                htmlElement.classList.toggle('dark');
+                
+                // Guardar la preferencia en localStorage
+                if (htmlElement.classList.contains('dark')) {
+                    localStorage.setItem('theme', 'dark');
+                    sunIcon.classList.remove('hidden');
+                    moonIcon.classList.add('hidden');
+                } else {
+                    localStorage.setItem('theme', 'light');
+                    sunIcon.classList.add('hidden');
+                    moonIcon.classList.remove('hidden');
+                }
+            }
+
+            // Comprobar la preferencia del usuario al cargar la página
+            if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            } else {
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            }
+
+            // Event listener para el botón de alternar tema
+            themeToggleBtn.addEventListener('click', toggleDarkMode);
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                statusMessage.classList.add('hidden'); // Ocultar mensaje anterior
+
+                const title = titleInput.value.trim();
+                const reportContent = reportTextarea.value.trim();
+
+                // Validación simple para asegurar que los campos no están vacíos
+                if (!title || !reportContent) {
+                    statusMessage.textContent = 'Por favor, completa tanto el título como el contenido del reporte.';
+                    statusMessage.className = 'mt-6 text-center text-sm font-medium text-red-600 block';
+                    return;
+                }
+
+                // Construir el payload del webhook
+                const payload = {
+                    embeds: [{
+                        title: title,
+                        description: reportContent,
+                        color: 3447003, // Color azul para el embed
+                        timestamp: new Date().toISOString(), // Añadir la hora de envío
+                    }]
+                };
+
+                try {
+                    const response = await fetch(webhookUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload),
+                    });
+
+                    if (response.ok) {
+                        statusMessage.textContent = 'Reporte enviado con éxito.';
+                        statusMessage.className = 'mt-6 text-center text-sm font-medium text-green-600 block';
+                        form.reset(); // Limpiar el formulario
+                    } else {
+                        statusMessage.textContent = `Error al enviar el reporte: ${response.statusText}`;
+                        statusMessage.className = 'mt-6 text-center text-sm font-medium text-red-600 block';
+                    }
+                } catch (error) {
+                    statusMessage.textContent = 'Hubo un problema de red. Asegúrate de que la URL del webhook es correcta.';
+                    statusMessage.className = 'mt-6 text-center text-sm font-medium text-red-600 block';
+                    console.error('Error:', error);
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
