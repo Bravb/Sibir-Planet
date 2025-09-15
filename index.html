@@ -7,38 +7,138 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(-45deg, #f0f4f8, #e2e8f0, #d1d8df, #c2cbd4);
+            background-size: 400% 400%;
+            animation: gradient-background 15s ease infinite;
+            transition: background-color 0.5s ease;
+        }
+
+        .dark body {
+            background: linear-gradient(-45deg, #1f2937, #111827, #1f2937, #374151);
+            background-size: 400% 400%;
+            animation: gradient-background 15s ease infinite;
+        }
+        
+        @keyframes gradient-background {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .shadow-custom {
+            box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 10px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .dark .shadow-custom {
+            box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.5), 0 4px 10px -2px rgba(0, 0, 0, 0.2);
+        }
+
+        .input-glow:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+            outline: none;
+        }
+
+        .dark .input-glow:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.8);
+        }
+
+        /* Estilos para el radio button */
+        input[type="radio"] + label {
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        input[type="radio"]:checked + label {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+
+        input[type="radio"]:checked + label.green-bg {
+            background-color: #34d399; /* Tailwind green-400 */
+        }
+        .dark input[type="radio"]:checked + label.green-bg {
+            background-color: #10b981; /* Tailwind emerald-500 */
+        }
+
+        input[type="radio"]:checked + label.yellow-bg {
+            background-color: #fcd34d; /* Tailwind yellow-400 */
+        }
+        .dark input[type="radio"]:checked + label.yellow-bg {
+            background-color: #fbbf24; /* Tailwind amber-400 */
+        }
+
+        input[type="radio"]:checked + label.red-bg {
+            background-color: #f87171; /* Tailwind red-400 */
+        }
+        .dark input[type="radio"]:checked + label.red-bg {
+            background-color: #ef4444; /* Tailwind red-500 */
+        }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 min-h-screen flex items-center justify-center p-4 transition-colors duration-500">
+<body class="min-h-screen flex items-center justify-center p-4">
 
     <!-- Contenedor principal de la aplicación -->
-    <div class="bg-white dark:bg-gray-800 p-8 md:p-10 rounded-xl shadow-lg w-full max-w-2xl relative transition-colors duration-500">
+    <div class="bg-white dark:bg-gray-800 p-8 md:p-10 rounded-3xl shadow-custom w-full max-w-4xl relative transition-colors duration-500">
         <!-- Botón para alternar el modo oscuro/claro -->
-        <button id="theme-toggle" class="absolute top-4 right-4 p-2 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 transition-colors duration-300 hover:bg-gray-300 dark:hover:bg-gray-700">
+        <button id="theme-toggle" class="absolute top-4 right-4 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-yellow-300 transition-colors duration-300 hover:bg-gray-300 dark:hover:bg-gray-600">
             <!-- Icono de sol (modo claro) -->
             <svg id="sun-icon" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.364 1.636a1 1 0 010 1.414l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 0zm-8.728 0a1 1 0 011.414 0l.707.707a1 1 0 01-1.414 1.414L3.636 4.364a1 1 0 010-1.414zm7.072 12.048a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM3 10a1 1 0 01-1-1V8a1 1 0 112 0v1a1 1 0 01-1 1zm14 0a1 1 0 01-1-1V8a1 1 0 112 0v1a1 1 0 01-1 1zM4.364 16.364a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zm8.728 0a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM10 5a5 5 0 100 10 5 5 0 000-10zm0 2a3 3 0 110 6 3 3 0 010-6z"/></svg>
             <!-- Icono de luna (modo oscuro) -->
             <svg id="moon-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
         </button>
 
-        <h1 class="text-3xl md:text-4xl font-bold text-gray-800 dark:text-gray-200 text-center mb-6 transition-colors duration-500">Enviar un Reporte a Sibir Planet</h1>
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-800 dark:text-gray-100 text-center mb-6 transition-colors duration-500">Enviar un Reporte a Sibir Planet</h1>
 
-        <!-- Formulario para el reporte -->
-        <form id="report-form" class="space-y-6">
-            <div>
-                <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-500">Título del Reporte</label>
-                <input type="text" id="title" name="title" class="mt-1 block w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-colors duration-150 ease-in-out placeholder-gray-400 dark:placeholder-gray-500 text-gray-800 dark:text-white" placeholder="Escribe un título conciso">
+        <!-- Contenedor del formulario con la nueva distribución en dos columnas -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Sección de Nivel de Importancia -->
+            <div class="md:col-span-1 p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 transition-colors duration-500">
+                <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Nivel de Importancia</h2>
+                <div class="flex flex-col space-y-3">
+                    <!-- Opción 1: Sin mucha importancia (Verde) -->
+                    <div class="relative">
+                        <input type="radio" id="importance-low" name="importance" value="low" class="absolute w-0 h-0 opacity-0 peer" checked>
+                        <label for="importance-low" class="green-bg block text-center py-2 px-4 rounded-lg cursor-pointer bg-green-200 text-green-800 font-medium peer-checked:bg-green-500 peer-checked:text-white dark:bg-green-700 dark:text-green-200 dark:peer-checked:bg-green-600 transition-all duration-300">
+                            Sin mucha importancia
+                        </label>
+                    </div>
+                    <!-- Opción 2: Media importancia (Amarillo) -->
+                    <div class="relative">
+                        <input type="radio" id="importance-medium" name="importance" value="medium" class="absolute w-0 h-0 opacity-0 peer">
+                        <label for="importance-medium" class="yellow-bg block text-center py-2 px-4 rounded-lg cursor-pointer bg-yellow-200 text-yellow-800 font-medium peer-checked:bg-yellow-500 peer-checked:text-white dark:bg-yellow-700 dark:text-yellow-200 dark:peer-checked:bg-yellow-600 transition-all duration-300">
+                            Media importancia
+                        </label>
+                    </div>
+                    <!-- Opción 3: Urgencia (Rojo) -->
+                    <div class="relative">
+                        <input type="radio" id="importance-high" name="importance" value="high" class="absolute w-0 h-0 opacity-0 peer">
+                        <label for="importance-high" class="red-bg block text-center py-2 px-4 rounded-lg cursor-pointer bg-red-200 text-red-800 font-medium peer-checked:bg-red-500 peer-checked:text-white dark:bg-red-700 dark:text-red-200 dark:peer-checked:bg-red-600 transition-all duration-300">
+                            Urgencia
+                        </label>
+                    </div>
+                </div>
             </div>
 
-            <div>
-                <label for="report-text" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-500">Contenido del Reporte</label>
-                <textarea id="report-text" name="report-text" rows="8" class="mt-1 block w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-colors duration-150 ease-in-out placeholder-gray-400 dark:placeholder-gray-500 text-gray-800 dark:text-white" placeholder="Escribe tu reporte aquí..."></textarea>
-            </div>
+            <!-- Sección principal del formulario -->
+            <div class="md:col-span-2">
+                <form id="report-form" class="space-y-6">
+                    <div>
+                        <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-500">Título del Reporte</label>
+                        <input type="text" id="title" name="title" class="mt-1 block w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg input-glow text-gray-800 dark:text-white transition-colors duration-150 ease-in-out placeholder-gray-400 dark:placeholder-gray-500" placeholder="Escribe un título conciso">
+                    </div>
 
-            <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
-                Enviar a Discord
-            </button>
-        </form>
+                    <div>
+                        <label for="report-text" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-500">Contenido del Reporte</label>
+                        <textarea id="report-text" name="report-text" rows="8" class="mt-1 block w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg input-glow text-gray-800 dark:text-white transition-colors duration-150 ease-in-out placeholder-gray-400 dark:placeholder-gray-500" placeholder="Escribe tu reporte aquí..."></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 ease-in-out transform hover:scale-105">
+                        Enviar a Discord
+                    </button>
+                </form>
+            </div>
+        </div>
 
         <!-- Mensaje de estado (éxito o error) -->
         <div id="status-message" class="mt-6 text-center text-sm font-medium hidden"></div>
@@ -57,6 +157,9 @@
 
             // Webhook URL proporcionada por el usuario
             const webhookUrl = 'https://discord.com/api/webhooks/1417184081313009694/tzd8qnvEr6vVaX_3E3NgIiSg-ofTCpbG_N9tVyTG67Sa5Nw1R8z9h0SeH9bur63gnySj';
+
+            // ID del rol de Staff
+            const staffRoleId = '1357828715744333914';
 
             // Función para alternar el modo oscuro
             function toggleDarkMode() {
@@ -94,20 +197,45 @@
 
                 const title = titleInput.value.trim();
                 const reportContent = reportTextarea.value.trim();
+                const importance = document.querySelector('input[name="importance"]:checked').value;
 
                 // Validación simple para asegurar que los campos no están vacíos
                 if (!title || !reportContent) {
                     statusMessage.textContent = 'Por favor, completa tanto el título como el contenido del reporte.';
-                    statusMessage.className = 'mt-6 text-center text-sm font-medium text-red-600 block';
+                    statusMessage.className = 'mt-6 text-center text-sm font-medium text-red-500 block';
                     return;
+                }
+
+                let color;
+                let importanceText;
+                let content = '';
+
+                switch (importance) {
+                    case 'low':
+                        color = 5763719; // Verde
+                        importanceText = 'Sin mucha importancia';
+                        break;
+                    case 'medium':
+                        color = 16776960; // Amarillo
+                        importanceText = 'Media importancia';
+                        break;
+                    case 'high':
+                        color = 15548997; // Rojo
+                        importanceText = 'Urgencia';
+                        content = `<@&${staffRoleId}>`; // Mencionar al rol de Staff
+                        break;
                 }
 
                 // Construir el payload del webhook
                 const payload = {
+                    content: content,
                     embeds: [{
                         title: title,
                         description: reportContent,
-                        color: 3447003, // Color azul para el embed
+                        color: color,
+                        footer: {
+                            text: `Importancia: ${importanceText}`
+                        },
                         timestamp: new Date().toISOString(), // Añadir la hora de envío
                     }]
                 };
@@ -123,15 +251,15 @@
 
                     if (response.ok) {
                         statusMessage.textContent = 'Reporte enviado con éxito.';
-                        statusMessage.className = 'mt-6 text-center text-sm font-medium text-green-600 block';
+                        statusMessage.className = 'mt-6 text-center text-sm font-medium text-green-500 block';
                         form.reset(); // Limpiar el formulario
                     } else {
                         statusMessage.textContent = `Error al enviar el reporte: ${response.statusText}`;
-                        statusMessage.className = 'mt-6 text-center text-sm font-medium text-red-600 block';
+                        statusMessage.className = 'mt-6 text-center text-sm font-medium text-red-500 block';
                     }
                 } catch (error) {
                     statusMessage.textContent = 'Hubo un problema de red. Asegúrate de que la URL del webhook es correcta.';
-                    statusMessage.className = 'mt-6 text-center text-sm font-medium text-red-600 block';
+                    statusMessage.className = 'mt-6 text-center text-sm font-medium text-red-500 block';
                     console.error('Error:', error);
                 }
             });
